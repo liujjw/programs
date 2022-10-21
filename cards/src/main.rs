@@ -28,6 +28,8 @@ fn main() -> io::Result<()> {
         hand_a_list.push(i);
     }
 
+    // TODO compare hands together
+
     Ok(())
 }
 
@@ -35,9 +37,10 @@ fn main() -> io::Result<()> {
 mod tests {
     use super::*;
 
+    // TODO
     #[test]
-    fn test_hi() -> () {
-        assert_eq!(1, 1);
+    fn test_hand_beats_hand() -> () {
+        assert_eq!(1, 0);
     }
 }
 
@@ -83,14 +86,15 @@ mod Card {
         // }
     }
 
-    impl<T> fmt::Debug for T 
-    where
-        T: CompareCards 
-    {
-        fn fmt(self: &T, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "{:?}", self)
-        }
-    }
+    // TODO
+    // impl<T> fmt::Debug for T 
+    // where
+    //     T: CompareCards 
+    // {
+    //     fn fmt(self: &T, f: &mut fmt::Formatter) -> fmt::Result {
+    //         write!(f, "{:?}", self)
+    //     }
+    // }
 }
 
 #[derive(Default)]
@@ -144,13 +148,14 @@ impl<'a> Game<'a> {
         })
     }
 
-    fn hand_string(&self, hand: u8) -> String {
-        self.hands[hand as usize].to_string()
-    }
+    // TODO
+    // fn hand_string(&self, hand: u8) -> String {
+    //     self.hands[hand as usize].to_string()
+    // }
 }
 
 // TODO derive clone/copy instead?
-#[derive(Debug)]
+// TODO #[derive(Debug)]
 struct Hand<'a> {
     cards: Vec<&'a Box<dyn Card::CompareCards>>
 }
