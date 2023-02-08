@@ -63,8 +63,9 @@ mod Card {
 
     #[derive(PartialEq,Eq,PartialOrd,Ord,Debug)]
     pub enum CardValue {
-      Value(u8),
-      J, Q, K, A, JOK
+        // "tagged union", an enum variant with a tuple struct 
+        Value(u8),
+        J, Q, K, A, JOK
     }
     
     impl fmt::Display for CardValue {
@@ -78,6 +79,7 @@ mod Card {
     }
 
     pub trait CompareCards {
+        // no clear default impl, leave unimplmented
         fn value(&self) -> &CardValue;
     
         // use of Self not object safe when doing dynamic dispatch 
@@ -97,10 +99,20 @@ mod Card {
     // }
 }
 
+use crate::Card::CompareCards;
+
+// dynamic dispatch
 #[derive(Default)]
 struct Game<'a> {
-    cards: std::vec::Vec<Box<dyn Card::CompareCards>>,
-    hands: std::vec::Vec<Hand<'a>>
+    cards: Vec<Box<dyn CompareCards>>,
+    hands: Vec<Hand<'a>>
+}
+
+// static generics
+#[derive(Default)]
+struct GameT<'a, T: CompareCards> {
+    cards: Vec<T>,
+    hands: Vec<Hand<'a>>,
 }
 
 impl<'a> Game<'a> {
@@ -154,10 +166,15 @@ impl<'a> Game<'a> {
     // }
 }
 
-// TODO derive clone/copy instead?
+// dynamic dispatch and heap allocation, slower
 // TODO #[derive(Debug)]
 struct Hand<'a> {
-    cards: Vec<&'a Box<dyn Card::CompareCards>>
+    cards: Vec<&'a Box<dyn CompareCards>>
+}
+
+// static injection, faster but larger code size
+struct HandT<'a, T: CompareCards> {
+    cards: Vec<&'a T>
 }
 
 impl Hand<'_> {
@@ -180,7 +197,7 @@ struct JokerCard {
     color: Card::Color,
 } 
 
-impl Card::CompareCards for JokerCard {
+impl CompareCards for JokerCard {
     fn value(&self) -> &Card::CardValue {
         &Card::CardValue::JOK
     } 
@@ -198,7 +215,7 @@ struct NormalCard {
   suit: Card::Suit 
 }
 
-impl Card::CompareCards for NormalCard {
+impl CompareCards for NormalCard {
     fn value(&self) -> &Card::CardValue {
         &self.value
     }   
@@ -210,4 +227,7 @@ impl fmt::Display for NormalCard {
     }
 }
 
+// if let Some(v) = val {} (best syntax for options, better than unwrap)
+// Rc<RefCell<T>>
+// ? for Result type
 
