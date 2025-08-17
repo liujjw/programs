@@ -1,0 +1,30 @@
+SELECT names
+FROM city
+WHERE rating > 3
+AND name != 'Berlin'
+AND name != 'Madrid'
+AND name LIKE '_ublin'
+AND population BETWEEN 400 AND 430
+AND rating IS NOT NULL
+AND country_id IN (1,2,3,4)
+ORDER BY rating DESC;
+
+SELECT city.name, country.name 
+FROM city 
+INNER JOIN country 
+ON city.country_id = country.id
+
+SELECT COUNT(*)
+FROM city;
+
+SELECT COUNT(DISTINCT id)
+FROM city;
+
+SELECT MAX(population), MIN(population)
+FROM country;
+
+SELECT country_id, SUM(population)
+FROM 
+
+
+
